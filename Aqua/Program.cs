@@ -31,7 +31,7 @@ namespace Aqua
         {
             Console.Title = "Aqua";
 
-            if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"Settings"))
+            /*if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"Settings"))
                 Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"Settings");
             if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"Settings\cfg.txt"))
                 File.Create(AppDomain.CurrentDomain.BaseDirectory + @"Settings\cfg.txt");
@@ -42,7 +42,8 @@ namespace Aqua
                 cfg = new Dictionary<ulong, Config>();
             }
             else
-                cfg = JsonConvert.DeserializeObject<Dictionary<ulong, Config>>(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Settings\cfg.txt"));
+                cfg = JsonConvert.DeserializeObject<Dictionary<ulong, Config>>(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Settings\cfg.txt"));*/
+            cfg = new Dictionary<ulong, Config>();
 
             embedColor = new Color(179, 17, 255);
 
