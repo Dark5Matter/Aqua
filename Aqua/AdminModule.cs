@@ -377,5 +377,29 @@ namespace Aqua
             }.Build());
             await Context.Guild.LeaveAsync();
         }
+
+        [Command("exit", RunMode=RunMode.Async)]
+        public async Task Exit()
+        {
+            #region Return if not bot owner
+            if (Context.User.Id != 210150851606609921)
+            {
+                await Context.Channel.SendMessageAsync("", embed: new EmbedBuilder()
+                {
+                    Description = "Insufficient permissions",
+                    Color = new Color(255, 0, 0)
+                }.Build());
+                return;
+            }
+            #endregion
+
+            var _ = await Context.Channel.SendMessageAsync("", embed: new EmbedBuilder()
+            {
+                Description = "Disconnecting",
+                Color = Program.embedColor
+            }.Build());
+            await Task.Delay(2000);
+            Environment.Exit(0);
+        }
     }
 }
