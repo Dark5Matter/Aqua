@@ -31,10 +31,10 @@ namespace Aqua
         {
             Console.Title = "Aqua";
 
-            if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Settings"))
-                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\Settings");
-            if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Settings\cfg.txt"))
-                File.Create(AppDomain.CurrentDomain.BaseDirectory + @"\Settings\cfg.txt");
+            if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"Settings"))
+                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"Settings");
+            if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"Settings\cfg.txt"))
+                File.Create(AppDomain.CurrentDomain.BaseDirectory + @"Settings\cfg.txt");
 
             var readCfg = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Settings\cfg.txt");
             if (string.IsNullOrEmpty(readCfg))
