@@ -8,7 +8,7 @@ using Discord.Commands;
 
 namespace Aqua
 {
-    public class ModerationModule : ModuleBase
+    /*public class ModerationModule : ModuleBase
     {
         [Command("welcomechannel", RunMode = RunMode.Async)]
         [Alias("wc")]
@@ -35,5 +35,5 @@ namespace Aqua
             await Task.Delay(3000);
             await Context.Message.DeleteAsync();
         }
-    }
+    }*/
 }

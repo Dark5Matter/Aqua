@@ -83,7 +83,7 @@ namespace Aqua
 
         private async Task Ready()
         {
-            await client.SetGameAsync("a.");
+            await client.SetGameAsync("a.help");
         }
 
         public async Task HandleCommand(SocketMessage m)

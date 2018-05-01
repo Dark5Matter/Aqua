@@ -39,93 +39,26 @@ namespace Aqua
             }.Build());
         }
 
-        [Command("wordstats", RunMode = RunMode.Async)]
-        [Alias("ws")]
-        [Summary("Lists the most frequently used words in this channel or the selected channel, or lists the most frequently used words by the user, if specified.")]
-        public async Task WordStats(int messageCount = 100, IMessageChannel inputChannel = null, IGuildUser user = null)
+        [Command("google")]
+        [Alias("g")]
+        [Summary("Returns the first result from google.")]
+        public async Task Google([Remainder] string query)
         {
-            // Return if larger than 500
-            if (Context.User.Id != 210150851606609921)
-                if (messageCount > 500)
-                { await ReplyAsync("The message count has to be less than 500"); return; }
+            var results = await GoogleAPI.GoogleAsync(query);
+            if (results.Items == null || results.SearchInformation.TotalResults == "0")
+            { await ReplyAsync($"Sorry, no results were found for \"{query}\"."); return; }
 
-            // Trigger typing
-            await Context.Channel.TriggerTypingAsync();
-
-            // Define the list of words
-            Dictionary<string, int> words = new Dictionary<string, int>(); // Dictionary<word, count>
-
-            // Define the list of messages
-            List<IMessage> messages = new List<IMessage>();
-
-            // Specify channel
-            IMessageChannel channel;
-            channel = (inputChannel == null) ?
-                    Context.Channel :
-                    inputChannel;
-
-            // Grab messages
-            try
-            {
-                messages = (user == null) ?
-                    (await channel.GetMessagesAsync(messageCount).Flatten().ToList()) :
-                    (await channel.GetMessagesAsync(messageCount).Flatten().Where(x => x.Author.Id == user.Id).ToList());
-            }
-            catch { await ReplyAsync("Sorry! I don't have access to the specified channel."); return; }
-
-            // Count words
-            foreach (var message in messages)
-            {
-                // Split each message into words
-                foreach (var word in message.Content.Split(' '))
-                {
-                    // Skip words that start with symbols/numbers such as :word: .word etc..
-                    try
-                    {
-                        if (!char.IsLetter(word[0]))
-                            continue;
-                    }
-                    catch { continue; }
-
-                    // Skip words that are shorter than 3
-                    if (word.Length < 3)
-                        continue;
-
-                    // Skip most common words up until "over"
-                    if (new List<string>() { "the", "and", "that", "have", "for", "not", "with", "you", "this", "but", "his", "from", "they", "say", "her", "she", "will", "one", "all", "would", "there", "their", "what", "out", "about", "who", "get", "which", "when", "make", "can", "like", "time", "just", "him", "know", "take", "people", "into", "year", "your", "good", "some", "could", "them", "see", "other", "than", "then", "now", "look", "only", "come", "its", "over", /*mine*/ "was", "how", "it's", "i'm", "too", "are" }.Contains(word.ToLower())) continue;
-
-                    // Increment by 1 if it already exists, or add it to the list if it doesn't
-                    if (words.Keys.Contains(word.ToLower()))
-                        words[word.ToLower()]++;
-                    else
-                        words.Add(word.ToLower(), 1);
-                }
-            }
-
-            // Order by count
-            var temp = words.ToList();
-            temp.Sort((x, y) => y.Value.CompareTo(x.Value));
-
-            // Make the embed
-            var e = new EmbedBuilder()
+            await ReplyAsync(string.Empty, embed: new EmbedBuilder()
             {
                 Color = Program.embedColor,
-                Title = "Word Stats",
-                Description = string.Format("Here are the most frequently used words{0}in {1}:",
-                user == null ? " " : " by " + user.Mention + " ",
-                "#" + channel.Name
-                )
-            };
-
-            // Add the fields to the embed
-            for (int i = 0; i < 9; i++)
-            {
-                if (temp.Count - 1 < i)
-                    continue;
-                e.AddField(temp[i].Key, temp[i].Value, true);
-            }
-
-            await ReplyAsync(string.Empty, embed: e.Build());
+                Title = $"Google search - {query}",
+                Url = "https://www.google.com/search?q=" + System.Net.WebUtility.UrlEncode(query),
+                Description = $"**{results.Items[0].Title}**\n{results.Items[0].Link}\n\n{results.Items[0].Snippet}",
+                Footer = new EmbedFooterBuilder()
+                {
+                    Text = $"Search time: {results.SearchInformation.SearchTime.ToString()}s"
+                }
+            }.Build());
         }
 
         [Command("say", RunMode = RunMode.Async)]

@@ -168,6 +168,7 @@
     <Compile Include="AdminModule.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="CREmbed.cs" />
+    <Compile Include="GoogleAPI.cs" />
     <Compile Include="InfoModule.cs" />
     <Compile Include="MessagesModule.cs" />
     <Compile Include="ModerationModule.cs" />
