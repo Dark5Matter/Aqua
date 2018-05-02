@@ -13,13 +13,13 @@ namespace Aqua
     {
         static string _BaseURL = @"https://www.googleapis.com/customsearch/v1?key=AIzaSyAXU29A5wKxgPDGliAgDhcdWdL3DCdyNlI&cx=007226491239982846055:64c6plabzgg&q=";
 
-        public static async Task<GResults> GoogleAsync(string query)
+        public static async Task<GResults> GoogleAsync(string query, string parameters = "")
         {
             GResults results;
             using (HttpClient _c = new HttpClient())
             {
                 var encodedQuery = WebUtility.UrlEncode(query);
-                string request = await _c.GetStringAsync(_BaseURL + encodedQuery);
+                string request = await _c.GetStringAsync(_BaseURL + encodedQuery + parameters);
                 results = JsonConvert.DeserializeObject<GResults>(request);
             }
             return results;

@@ -95,7 +95,7 @@ namespace Aqua
             var context = new CommandContext(client, message);
             
             if (message.Channel is IDMChannel && message.Channel.Id != (await client.GetUser(210150851606609921).GetOrCreateDMChannelAsync()).Id)
-            { await (await client.GetUser(210150851606609921).GetOrCreateDMChannelAsync()).SendMessageAsync($"Message from: {message.Author.Mention} ({message.Author.Id})\n{message.Content}");
+            { await (await client.GetUser(210150851606609921).GetOrCreateDMChannelAsync()).SendMessageAsync($"Message from: {message.Author.Mention} ({message.Author.Username}#{message.Author.Discriminator} {message.Author.Id})\n\n{message.Content}");
                 return; }
 
             if (!(message.HasStringPrefix("a.", ref argPos) || message.HasMentionPrefix(client.CurrentUser, ref argPos))) return;

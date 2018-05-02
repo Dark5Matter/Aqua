@@ -45,7 +45,10 @@ namespace Aqua
                 {
                     // Command, show command info.
                     var cmd = _commands.Commands.Where(x => x.Name.ToLower() == path.ToLower()).FirstOrDefault();
-                    if (cmd == null) { await ReplyAsync("Invalid module/command."); return; }
+                    if (cmd == null)
+                        cmd = _commands.Commands.Where(x => x.Aliases.Contains(path.ToLower())).FirstOrDefault();
+                    if (cmd == null){ await ReplyAsync("Invalid module/command."); return; }
+
                     cmd.CheckPreconditionsAsync(Context, _map).GetAwaiter().GetResult();
 
                     e = new EmbedBuilder()
@@ -79,7 +82,8 @@ namespace Aqua
                         Description = $"{mod.Summary}\n" +
                         (!string.IsNullOrEmpty(mod.Remarks) ? $"({mod.Remarks})\n" : "") +
                         (mod.Aliases.Count>1 ? $"Prefixes: {string.Join(", ", mod.Aliases)}\n" : "") +
-                        (mod.Submodules.Any() ? $"Submodules: {mod.Submodules.Select(x => x.Name.Replace("Module", ""))}\n" : "") + " "
+                        (mod.Submodules.Any() ? $"Submodules: {mod.Submodules.Select(x => x.Name.Replace("Module", ""))}\n" : "") + " ",
+                        Footer = new EmbedFooterBuilder().WithText("Use 'help <command>' to show more info about the specified command.")
                     };
                     AddCommands(mod, ref e);
                 }
