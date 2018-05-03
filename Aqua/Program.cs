@@ -128,8 +128,12 @@ namespace Aqua
 
                     string text = $"⭐ 1 <#{ch.Id}> ({msg.Id})";
                     var starboard = await context.Guild.GetChannelAsync(cfg[context.Guild.Id].StarboardID);
-                    if (ch.Id == starboard.Id)
-                        return;
+                    try
+                    {
+                        if (ch.Id == starboard.Id || reaction.User.Value.Id == msg.Author.Id)
+                            return;
+                    }
+                    catch { }
                     var starref = await (starboard as IMessageChannel).SendMessageAsync(text, false, em.Build());
 
                     cfg[context.Guild.Id].Stars.Add(msg.Id, 1);

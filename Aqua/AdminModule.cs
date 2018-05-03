@@ -401,5 +401,68 @@ namespace Aqua
             await Task.Delay(2000);
             Environment.Exit(0);
         }
+
+        [Command("addmessage")]
+        public async Task AddMessage(ulong id, ulong starid, int amount, IMessageChannel channel)
+        {
+            #region Return if not bot owner
+            if (Context.User.Id != 210150851606609921)
+            {
+                await Context.Channel.SendMessageAsync("", embed: new EmbedBuilder()
+                {
+                    Description = "Insufficient permissions",
+                    Color = new Color(255, 0, 0)
+                }.Build());
+                return;
+            }
+            #endregion
+
+            var starboard = await Context.Guild.GetChannelAsync(Program.cfg[Context.Guild.Id].StarboardID);
+
+            Program.cfg[Context.Guild.Id].Stars.Add(id, amount);
+            Program.cfg[Context.Guild.Id].StarRef.Add(id, starid);
+
+            await Context.Message.AddReactionAsync(new Emoji("✅"));
+        }
+
+        [Command("savesettings")]
+        public async Task SaveSettings()
+        {
+            #region Return if not bot owner
+            if (Context.User.Id != 210150851606609921)
+            {
+                await Context.Channel.SendMessageAsync("", embed: new EmbedBuilder()
+                {
+                    Description = "Insufficient permissions",
+                    Color = new Color(255, 0, 0)
+                }.Build());
+                return;
+            }
+            #endregion
+
+            await ReplyAsync(Properties.Settings.Default._config);
+            await Context.Message.DeleteAsync();
+        }
+
+        [Command("loadsettings")]
+        public async Task LoadSettings(ulong id)
+        {
+            #region Return if not bot owner
+            if (Context.User.Id != 210150851606609921)
+            {
+                await Context.Channel.SendMessageAsync("", embed: new EmbedBuilder()
+                {
+                    Description = "Insufficient permissions",
+                    Color = new Color(255, 0, 0)
+                }.Build());
+                return;
+            }
+            #endregion
+            
+            Program.cfg = JsonConvert.DeserializeObject<Dictionary<ulong, Config>>((await Context.Channel.GetMessageAsync(id)).Content);
+            await (await Context.Channel.GetMessageAsync(id)).DeleteAsync();
+
+            await Context.Message.AddReactionAsync(new Emoji("✅"));
+        }
     }
 }
