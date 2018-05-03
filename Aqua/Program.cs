@@ -43,7 +43,12 @@ namespace Aqua
             }
             else
                 cfg = JsonConvert.DeserializeObject<Dictionary<ulong, Config>>(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Settings\cfg.txt"));*/
-            cfg = new Dictionary<ulong, Config>();
+            //cfg = new Dictionary<ulong, Config>();
+            var readCfg = Properties.Settings.Default._config;
+            if (string.IsNullOrEmpty(readCfg))
+                cfg = new Dictionary<ulong, Config>();
+            else
+                cfg = JsonConvert.DeserializeObject<Dictionary<ulong, Config>>(readCfg);
 
             embedColor = new Color(179, 17, 255);
 

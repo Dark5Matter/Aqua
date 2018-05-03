@@ -22,7 +22,9 @@ namespace Aqua
 
         public static void Save(Dictionary<ulong, Config> cfg)
         {
-            File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Settings\cfg.txt", JsonConvert.SerializeObject(cfg));
+            //File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Settings\cfg.txt", JsonConvert.SerializeObject(cfg));
+            Properties.Settings.Default._config = JsonConvert.SerializeObject(cfg);
+            Properties.Settings.Default.Save();
         }
 
         public static void CheckGuild(Dictionary<ulong, Config> cfg, ulong id)
