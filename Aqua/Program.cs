@@ -124,20 +124,12 @@ namespace Aqua
                 if (!cfg[context.Guild.Id].Stars.Keys.Contains(msg.Id))
                 {
                     //New starred message. Add it to the #starboard
-                    EmbedBuilder em = new EmbedBuilder()
-                    {
-                        Author = new EmbedAuthorBuilder()
-                        {
-                            IconUrl = msg.Author.GetAvatarUrl(),
-                            Name = msg.Author.Username
-                        },
-                        Description = msg.Content,
-                        Timestamp=msg.Timestamp,
-                        Color = new Color(255, 225, 61)
-                    };
+                    EmbedBuilder em = BuildStar(msg);
 
                     string text = $"⭐ 1 <#{ch.Id}> ({msg.Id})";
                     var starboard = await context.Guild.GetChannelAsync(cfg[context.Guild.Id].StarboardID);
+                    if (ch.Id == starboard.Id)
+                        return;
                     var starref = await (starboard as IMessageChannel).SendMessageAsync(text, false, em.Build());
 
                     cfg[context.Guild.Id].Stars.Add(msg.Id, 1);
@@ -157,6 +149,39 @@ namespace Aqua
                     Config.Save(cfg);
                 }
             }
+        }
+        #endregion
+        #region BuildStar
+        private EmbedBuilder BuildStar(IMessage message)
+        {
+            var eb = new EmbedBuilder()
+                .WithAuthor(message.Author)
+                .WithDescription(message.Content)
+                .WithColor(new Color(255, 255, 61))
+                .WithTimestamp(message.Timestamp);
+
+            var attachment = message.Attachments.FirstOrDefault();
+            var embed = message.Embeds.FirstOrDefault();
+
+            if (attachment != null && attachment.Width.HasValue && attachment.Width.Value != 0)
+                eb.WithImageUrl(attachment.Url);
+
+            else if (embed != null)
+            {
+                if (embed.Image.HasValue)
+                    eb.WithImageUrl(embed.Image.Value.Url);
+
+                else if (!string.IsNullOrWhiteSpace(embed.Url)/* && Globals.ImageFormats.Any(embed.Url.EndsWith)*/)
+                    eb.WithImageUrl(embed.Url);
+
+                else if (embed.Thumbnail.HasValue)
+                    eb.WithImageUrl(embed.Thumbnail.Value.Url);
+            }
+
+            if (string.IsNullOrWhiteSpace(message.Content) && string.IsNullOrWhiteSpace(eb.Description) && string.IsNullOrWhiteSpace(eb.ImageUrl))
+                return null;
+
+            return eb;
         }
         #endregion
 
