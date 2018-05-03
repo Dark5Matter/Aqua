@@ -460,6 +460,8 @@ namespace Aqua
             #endregion
             
             Program.cfg = JsonConvert.DeserializeObject<Dictionary<ulong, Config>>((await Context.Channel.GetMessageAsync(id)).Content);
+            Config.Save(Program.cfg);
+
             await (await Context.Channel.GetMessageAsync(id)).DeleteAsync();
 
             await Context.Message.AddReactionAsync(new Emoji("✅"));
