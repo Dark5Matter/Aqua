@@ -23,15 +23,12 @@ namespace Aqua.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("NDEwNDQ1NDI1OTU1NTY5NjY0.DbTRKQ.vRnDlH3WDi9dQC7OFXBcBj_F3H8")]
         public string _key {
             get {
                 return ((string)(this["_key"]));
-            }
-            set {
-                this["_key"] = value;
             }
         }
         

@@ -418,12 +418,15 @@ namespace Aqua
 
             var attachment = Context.Message.Attachments.FirstOrDefault();
 
-            using (System.Net.Http.HttpClient c = new System.Net.Http.HttpClient())
-            {
-                var data = await c.GetStreamAsync(attachment == null ? url : attachment.Url);
-                data.Seek(0, SeekOrigin.Begin);
-                await Context.Client.CurrentUser.ModifyAsync(x => x.Avatar = new Image(data));
-            }
+            using (var http = new System.Net.Http.HttpClient())
+                using (var sr = await http.GetStreamAsync(attachment == null ? url : attachment.Url))
+                {
+                    var imgStream = new MemoryStream();
+                    await sr.CopyToAsync(imgStream);
+                    imgStream.Position = 0;
+
+                    await Context.Client.CurrentUser.ModifyAsync(u => u.Avatar = new Image(imgStream));
+                }
 
             await Context.Message.AddReactionAsync(new Emoji("✅"));
         }

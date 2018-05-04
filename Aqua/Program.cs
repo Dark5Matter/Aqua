@@ -73,7 +73,7 @@ namespace Aqua
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
 
-            string token = "NDEwNDQ1NDI1OTU1NTY5NjY0.DbTRKQ.vRnDlH3WDi9dQC7OFXBcBj_F3H8";
+            string token = Properties.Settings.Default._key;
             await client.LoginAsync(TokenType.Bot, token);
             await client.StartAsync();
 

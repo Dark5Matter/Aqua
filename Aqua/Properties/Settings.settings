@@ -2,8 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Aqua.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="_key" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="_key" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">NDEwNDQ1NDI1OTU1NTY5NjY0.DbTRKQ.vRnDlH3WDi9dQC7OFXBcBj_F3H8</Value>
     </Setting>
     <Setting Name="_config" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
