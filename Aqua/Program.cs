@@ -89,6 +89,7 @@ namespace Aqua
         private async Task Ready()
         {
             await client.SetGameAsync("a.help");
+            await (client.GetGuild(307628394684612610).GetChannel(435065798730711051) as IMessageChannel).SendMessageAsync("Deployed! " + DateTime.Now.ToLongTimeString());
         }
 
         public async Task HandleCommand(SocketMessage m)

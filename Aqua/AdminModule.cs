@@ -401,6 +401,52 @@ namespace Aqua
             await Task.Delay(2000);
             Environment.Exit(0);
         }
+        [Command("pfp", RunMode = RunMode.Async)]
+        public async Task Pfp([Remainder] string url = null)
+        {
+            #region Return if not bot owner
+            if (Context.User.Id != 210150851606609921)
+            {
+                await Context.Channel.SendMessageAsync("", embed: new EmbedBuilder()
+                {
+                    Description = "Insufficient permissions",
+                    Color = new Color(255, 0, 0)
+                }.Build());
+                return;
+            }
+            #endregion
+
+            var attachment = Context.Message.Attachments.FirstOrDefault();
+
+            using (System.Net.Http.HttpClient c = new System.Net.Http.HttpClient())
+            {
+                var data = await c.GetStreamAsync(attachment == null ? url : attachment.Url);
+                data.Seek(0, SeekOrigin.Begin);
+                await Context.Client.CurrentUser.ModifyAsync(x => x.Avatar = new Image(data));
+            }
+
+            await Context.Message.AddReactionAsync(new Emoji("✅"));
+        }
+
+        [Command("username", RunMode = RunMode.Async)]
+        public async Task Username([Remainder] string username)
+        {
+            #region Return if not bot owner
+            if (Context.User.Id != 210150851606609921)
+            {
+                await Context.Channel.SendMessageAsync("", embed: new EmbedBuilder()
+                {
+                    Description = "Insufficient permissions",
+                    Color = new Color(255, 0, 0)
+                }.Build());
+                return;
+            }
+            #endregion
+
+            await Context.Client.CurrentUser.ModifyAsync(x => x.Username = username);
+
+            await Context.Message.AddReactionAsync(new Emoji("✅"));
+        }
 
         [Command("addmessage")]
         public async Task AddMessage(ulong id, ulong starid, int amount, IMessageChannel channel)
