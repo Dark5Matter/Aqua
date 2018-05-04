@@ -219,6 +219,8 @@ namespace Aqua
 
                     var starref = await ((await context.Guild.GetChannelAsync(cfg[context.Guild.Id].StarboardID)) as IMessageChannel).GetMessageAsync(cfg[context.Guild.Id].StarRef[msg.Id]);
                     await (starref as IUserMessage).ModifyAsync(x => x.Content = $"⭐ {cfg[context.Guild.Id].Stars[msg.Id].ToString()} <#{ch.Id}> ({msg.Id})");
+
+                    Config.Save(cfg);
                 }
             }
         }
