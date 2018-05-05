@@ -327,6 +327,22 @@ namespace Aqua
 
             await (Context.Channel as ITextChannel).DeleteMessagesAsync(await Context.Channel.GetMessagesAsync(amount + 1).Flatten().ToList());
         }
+        public async Task Prune(IGuildUser user)
+        {
+            #region Return if not bot owner
+            if (Context.User.Id != 210150851606609921)
+            {
+                await Context.Channel.SendMessageAsync("", embed: new EmbedBuilder()
+                {
+                    Description = "Insufficient permissions",
+                    Color = new Color(255, 0, 0)
+                }.Build());
+                return;
+            }
+            #endregion
+
+            await (Context.Channel as ITextChannel).DeleteMessagesAsync(await Context.Channel.GetMessagesAsync(100).Flatten().Where(x=>x.Author.Id == user.Id).ToList());
+        }
 
         [Command("synchronize", RunMode = RunMode.Async)]
         public async Task Synchronize()

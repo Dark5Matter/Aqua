@@ -138,6 +138,7 @@ namespace Aqua
 
         [Command("say", RunMode = RunMode.Async)]
         [Summary("Sends a message in this channel.")]
+        [RequireUserPermission(GuildPermission.Administrator)]
         public async Task Say([Remainder] string content)
         {
             await ReplyAsync(content);
