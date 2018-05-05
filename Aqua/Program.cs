@@ -115,7 +115,17 @@ namespace Aqua
         public async Task ReactionAdded(Cacheable<IUserMessage, ulong> cachedMessage, ISocketMessageChannel ch, SocketReaction reaction)
         {
             var msg = await cachedMessage.GetOrDownloadAsync();
+
             var context = new CommandContext(client, msg);
+            
+            var starboard = await context.Guild.GetChannelAsync(cfg[context.Guild.Id].StarboardID);
+
+            try
+            {
+                if (ch.Id == starboard.Id || reaction.User.Value.Id == msg.Author.Id)
+                    return;
+            }
+            catch { }
 
             if (!cfg.Keys.Contains(context.Guild.Id))
                 return;
@@ -128,13 +138,6 @@ namespace Aqua
                     EmbedBuilder em = BuildStar(msg);
 
                     string text = $"⭐ 1 <#{ch.Id}> ({msg.Id})";
-                    var starboard = await context.Guild.GetChannelAsync(cfg[context.Guild.Id].StarboardID);
-                    try
-                    {
-                        if (ch.Id == starboard.Id || reaction.User.Value.Id == msg.Author.Id)
-                            return;
-                    }
-                    catch { }
                     var starref = await (starboard as IMessageChannel).SendMessageAsync(text, false, em.Build());
 
                     cfg[context.Guild.Id].Stars.Add(msg.Id, 1);
@@ -148,7 +151,7 @@ namespace Aqua
                     //Old starred message. Add one upvote/star to it
                     cfg[context.Guild.Id].Stars[msg.Id]++;
 
-                    var starref = await ((await context.Guild.GetChannelAsync(cfg[context.Guild.Id].StarboardID)) as IMessageChannel).GetMessageAsync(cfg[context.Guild.Id].StarRef[msg.Id]);
+                    var starref = await (starboard as IMessageChannel).GetMessageAsync(cfg[context.Guild.Id].StarRef[msg.Id]);
                     await (starref as IUserMessage).ModifyAsync(x => x.Content = $"⭐ {cfg[context.Guild.Id].Stars[msg.Id].ToString()} <#{ch.Id}> ({msg.Id})");
 
                     Config.Save(cfg);
@@ -194,7 +197,17 @@ namespace Aqua
         public async Task ReactionRemoved(Cacheable<IUserMessage, ulong> cachedMessage, ISocketMessageChannel ch, SocketReaction reaction)
         {
             var msg = await cachedMessage.GetOrDownloadAsync();
+
             var context = new CommandContext(client, msg);
+
+            var starboard = await context.Guild.GetChannelAsync(cfg[context.Guild.Id].StarboardID);
+
+            try
+            {
+                if (ch.Id == starboard.Id || reaction.User.Value.Id == msg.Author.Id)
+                    return;
+            }
+            catch { }
 
             if (!cfg.Keys.Contains(context.Guild.Id))
                 return;
@@ -204,7 +217,7 @@ namespace Aqua
                 if (cfg[context.Guild.Id].Stars[msg.Id] == 1)
                 {
                     //Remove from the starboard
-                    var starref = await ((await context.Guild.GetChannelAsync(cfg[context.Guild.Id].StarboardID)) as IMessageChannel).GetMessageAsync(cfg[context.Guild.Id].StarRef[msg.Id]);
+                    var starref = await (starboard as IMessageChannel).GetMessageAsync(cfg[context.Guild.Id].StarRef[msg.Id]);
                     await starref.DeleteAsync();
 
                     cfg[context.Guild.Id].StarRef.Remove(msg.Id);
@@ -217,7 +230,7 @@ namespace Aqua
                     //Update amount
                     cfg[context.Guild.Id].Stars[msg.Id]--;
 
-                    var starref = await ((await context.Guild.GetChannelAsync(cfg[context.Guild.Id].StarboardID)) as IMessageChannel).GetMessageAsync(cfg[context.Guild.Id].StarRef[msg.Id]);
+                    var starref = await (starboard as IMessageChannel).GetMessageAsync(cfg[context.Guild.Id].StarRef[msg.Id]);
                     await (starref as IUserMessage).ModifyAsync(x => x.Content = $"⭐ {cfg[context.Guild.Id].Stars[msg.Id].ToString()} <#{ch.Id}> ({msg.Id})");
 
                     Config.Save(cfg);
@@ -230,12 +243,22 @@ namespace Aqua
         private async Task ReactionsCleared(Cacheable<IUserMessage, ulong> cachedMessage, ISocketMessageChannel ch)
         {
             var msg = await cachedMessage.GetOrDownloadAsync();
+
             var context = new CommandContext(client, msg);
+
+            var starboard = await context.Guild.GetChannelAsync(cfg[context.Guild.Id].StarboardID);
+
+            try
+            {
+                if (ch.Id == starboard.Id)
+                    return;
+            }
+            catch { }
 
             if (!cfg.Keys.Contains(context.Guild.Id))
                 return;
 
-            var starref = await ((await context.Guild.GetChannelAsync(cfg[context.Guild.Id].StarboardID)) as IMessageChannel).GetMessageAsync(cfg[context.Guild.Id].StarRef[msg.Id]);
+            var starref = await (starboard as IMessageChannel).GetMessageAsync(cfg[context.Guild.Id].StarRef[msg.Id]);
             await starref.DeleteAsync();
 
             cfg[context.Guild.Id].StarRef.Remove(msg.Id);
