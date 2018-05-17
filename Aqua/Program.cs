@@ -71,6 +71,9 @@ namespace Aqua
             client.ReactionsCleared += ReactionsCleared;
             client.Ready += Ready;
 
+            client.UserUpdated += UserUpdated;
+            client.GuildMemberUpdated += GuildMemberUpdated;
+
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
 
             string token = Properties.Settings.Default._key;
@@ -78,6 +81,33 @@ namespace Aqua
             await client.StartAsync();
 
             await Task.Delay(-1);
+        }
+
+        private async Task GuildMemberUpdated(SocketGuildUser arg1, SocketGuildUser arg2)
+        {
+            if (arg1.Status == arg2.Status)
+                return;
+            var tracker = client.GetGuild(307628394684612610).GetChannel(446732405504606208) as IMessageChannel;
+            await tracker.SendMessageAsync(string.Empty, embed:
+                new EmbedBuilder()
+                {
+                    Color = embedColor,
+                    Title = "Status Update",
+                    Description = string.Format("{0}\nWent from being {1} to {2}.", $"{arg1.Username}#{arg1.Discriminator}", arg1.Status.ToString(), arg2.Status.ToString())
+                }.Build());
+        }
+
+        private async Task UserUpdated(SocketUser arg1, SocketUser arg2)
+        {
+            var tracker = client.GetGuild(307628394684612610).GetChannel(446732405504606208) as IMessageChannel;
+            await tracker.SendMessageAsync(string.Empty, embed:
+                new EmbedBuilder()
+                {
+                    Color = embedColor,
+                    Title = "User Update",
+                    Description = string.Format("Username: {0} -> {1}", $"{arg1.Username}#{arg1.Discriminator}", $"{arg2.Username}#{arg2.Discriminator}"),
+                    ImageUrl = arg2.GetAvatarUrl()
+                }.WithAuthor(arg1).Build());
         }
 
         private Task Log(LogMessage msg)
