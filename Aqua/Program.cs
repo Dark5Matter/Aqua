@@ -71,8 +71,8 @@ namespace Aqua
             client.ReactionsCleared += ReactionsCleared;
             client.Ready += Ready;
 
-            client.UserUpdated += UserUpdated;
-            client.GuildMemberUpdated += GuildMemberUpdated;
+            //client.UserUpdated += UserUpdated;
+            //client.GuildMemberUpdated += GuildMemberUpdated;
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
 
@@ -93,7 +93,8 @@ namespace Aqua
                 {
                     Color = embedColor,
                     Title = "Status Update",
-                    Description = string.Format("{0}\nWent from being {1} to {2}.", $"{arg1.Username}#{arg1.Discriminator}", arg1.Status.ToString(), arg2.Status.ToString())
+                    Description = string.Format("{0}\nWent from being {1} to {2}.", $"{arg1.Username}#{arg1.Discriminator}", arg1.Status.ToString(), arg2.Status.ToString()),
+                    Timestamp = DateTime.Now
                 }.Build());
         }
 
