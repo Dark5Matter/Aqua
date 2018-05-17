@@ -71,7 +71,7 @@ namespace Aqua
             client.ReactionsCleared += ReactionsCleared;
             client.Ready += Ready;
 
-            //client.UserUpdated += UserUpdated;
+            client.UserUpdated += UserUpdated;
             //client.GuildMemberUpdated += GuildMemberUpdated;
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
@@ -107,7 +107,8 @@ namespace Aqua
                     Color = embedColor,
                     Title = "User Update",
                     Description = string.Format("Username: {0} -> {1}", $"{arg1.Username}#{arg1.Discriminator}", $"{arg2.Username}#{arg2.Discriminator}"),
-                    ImageUrl = arg2.GetAvatarUrl()
+                    ImageUrl = arg2.GetAvatarUrl(),
+                    Timestamp = DateTime.Now
                 }.WithAuthor(arg1).Build());
         }
 
