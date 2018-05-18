@@ -515,5 +515,39 @@ namespace Aqua
 
             await Context.Message.AddReactionAsync(new Emoji("✅"));
         }
+
+        [Command("count")]
+        public async Task Count(ulong messageid, int limit = 5000)
+        {
+            #region Return if not bot owner
+            if (Context.User.Id != 210150851606609921)
+            {
+                await Context.Channel.SendMessageAsync("", embed: new EmbedBuilder()
+                {
+                    Description = "Insufficient permissions",
+                    Color = new Color(255, 0, 0)
+                }.Build());
+                return;
+            }
+            #endregion
+
+            int count = 0;
+            var messages = (await Context.Channel.GetMessagesAsync(limit).FlattenAsync()).ToList();
+
+            foreach (var msg in messages)
+            {
+                count++;
+                if (msg.Id == messageid)
+                    break;
+            }
+
+            await Context.Channel.SendMessageAsync(string.Empty, embed:
+                new EmbedBuilder()
+                {
+                    Color = Program.embedColor,
+                    Title = "Count Result",
+                    Description = $"There are {count} messages in the way. :^)"
+                }.Build());
+        }
     }
 }
