@@ -143,5 +143,49 @@ namespace Aqua
         {
             await ReplyAsync(content);
         }
+
+        [RequireUserPermission(GuildPermission.Administrator)]
+        [Command("prune")]
+        [Summary("Prunes the last x messages in this channel.")]
+        public async Task Prune(int amount)
+        {
+            #region Return if not bot owner
+            if (Context.User.Id != 210150851606609921)
+            {
+                await Context.Channel.SendMessageAsync("", embed: new EmbedBuilder()
+                {
+                    Description = "Insufficient permissions",
+                    Color = new Color(255, 0, 0)
+                }.Build());
+                return;
+            }
+            #endregion
+
+            await (Context.Channel as ITextChannel).DeleteMessagesAsync(await Context.Channel.GetMessagesAsync(amount + 1).Flatten().ToList());
+        }
+
+        [RequireUserPermission(GuildPermission.Administrator)]
+        [Command("count")]
+        [Summary("Counts the messages between the last message sent in this channel and the specified message.")]
+        public async Task Count(ulong messageid, int limit = 5000)
+        {
+            int count = 0;
+            var messages = (await Context.Channel.GetMessagesAsync(limit).FlattenAsync()).ToList();
+
+            foreach (var msg in messages)
+            {
+                count++;
+                if (msg.Id == messageid)
+                    break;
+            }
+
+            await Context.Channel.SendMessageAsync(string.Empty, embed:
+                new EmbedBuilder()
+                {
+                    Color = Program.embedColor,
+                    Title = "Count Result",
+                    Description = $"There are {count} messages in the way. :^)"
+                }.Build());
+        }
     }
 }
