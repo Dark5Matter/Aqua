@@ -99,7 +99,7 @@ namespace Aqua
 
             foreach (var item in results.Items.Take(5))
                 eb.Description +=
-                    $"**{item.Title}**\n{item.Link}\n{item.Snippet}\n\n";
+                    $"[{item.Title}]({item.Link})\n{item.Snippet}\n\n";
 
             return eb;
         }
