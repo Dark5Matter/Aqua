@@ -497,5 +497,25 @@ namespace Aqua
 
             await Context.Message.AddReactionAsync(new Emoji("✅"));
         }
+
+        [Command("host")]
+        public async Task Host(string channel, [Remainder] string streamname)
+        {
+            #region Return if not bot owner
+            if (Context.User.Id != 210150851606609921 && Context.User.Id != 411206923409686543)
+            {
+                await Context.Channel.SendMessageAsync("", embed: new EmbedBuilder()
+                {
+                    Description = "Insufficient permissions",
+                    Color = new Color(255, 0, 0)
+                }.Build());
+                return;
+            }
+            #endregion
+
+            int status = 1;
+            
+            await (Context.Client as DiscordSocketClient).SetGameAsync(streamname, $"https://www.twitch.tv/{channel}", ActivityType.Streaming);
+        }
     }
 }
