@@ -187,5 +187,19 @@ namespace Aqua
                     Description = $"There are {count} messages in the way. :^)"
                 }.Build());
         }
+
+        [Command("grabpfp")]
+        [Summary("Grabs the profile picture link for the provided user.")]
+        public async Task GrabPfp(ulong userid, int size = 512)
+        {
+            using (Discord.Rest.DiscordRestClient restC = new Discord.Rest.DiscordRestClient())
+            {
+                await restC.LoginAsync(TokenType.Bot, Properties.Settings.Default._key);
+
+                var user = await restC.GetUserAsync(userid);
+
+                await ReplyAsync(user.GetAvatarUrl().Replace("?size=128", "?size=" + size.ToString()));
+            }
+        }
     }
 }
