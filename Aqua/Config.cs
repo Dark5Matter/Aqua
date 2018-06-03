@@ -11,6 +11,7 @@ namespace Aqua
 {
     public class Config
     {
+        // PLACEHOLDER
         // Starboard
         public ulong StarboardID { get; set; }
         public Dictionary<ulong, int> Stars { get; set; }
